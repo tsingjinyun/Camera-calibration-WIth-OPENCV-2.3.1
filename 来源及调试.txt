@@ -1,0 +1,8 @@
+http://www.opencv.org.cn/forum/viewtopic.php?p=59483
+
+1>opencv.obj : error LNK2019: 无法解析的外部符号 _cvCalibrateCamera2，该符号在函数 _main 中被引用
+1>opencv.obj : error LNK2019: 无法解析的外部符号 _cvDrawChessboardCorners，该符号在函数 _main 中被引用
+1>opencv.obj : error LNK2019: 无法解析的外部符号 _cvFindChessboardCorners，该符号在函数 _main 中被引用
+
+改正：
+添加D:\openCv2.3.1\opencv\build\x86\vc10\lib\opencv_calib3d231d.lib

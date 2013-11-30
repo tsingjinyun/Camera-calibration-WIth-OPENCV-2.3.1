@@ -1,0 +1,75 @@
+﻿#include "stdafx.h"
+#include "highgui.h"
+#include "cv.h"
+#include "cxcore.h"
+
+
+IplImage *gray = cvCreateImage( cvSize( 500, 500 ), 8, 1);
+void init_image( );
+
+
+
+
+int main(int argc, CHAR* argv[])
+{	
+	CvMemStorage *storage = cvCreateMemStorage( 0 );
+	CvSeq *firstcontour = NULL;
+	init_image();	//画出四组曲线：一个圆和两个椭圆并且三个中心点相同
+	cvNamedWindow( "haha", 1 );
+	cvNamedWindow( "jieguo", 1 );
+	cvShowImage( "haha", gray );
+	int nc = cvFindContours( gray, storage, &firstcontour,
+		sizeof( CvContour ),
+		CV_RETR_LIST,  //try all four values and see what happens
+		CV_CHAIN_APPROX_SIMPLE );  
+	printf( "total contours detected is %d\n", nc );
+	IplImage *color = cvCreateImage( cvSize( 500, 500 ), 8, 3);
+	cvZero( color );
+
+
+	int n = 0;
+	for ( CvSeq *c = firstcontour; c != NULL; c = c->h_next ){
+		cvDrawContours(
+			color,
+			c,
+			CV_RGB( 255, 0, 0),
+			CV_RGB( 0, 0, 255),
+ 
+			0,   //try different values of max_level,and see what happens
+			1,
+			8
+			);
+		printf( "contour %d\n", n );
+		cvShowImage( "jieguo", color );
+		printf( "total number %d\n", c->total );
+		for (int i= 0; i<c->total; i++){
+			CvPoint *p = (CvPoint *)cvGetSeqElem(  c, i);
+			printf("( %d %d)\n", p->x, p->y );
+		}
+		cvWaitKey(0);
+		n++;
+	}
+
+
+	cvWaitKey(0);
+	cvReleaseImage( &gray );
+	cvDestroyWindow( "haha" );
+	return 0;
+}
+
+
+void init_image( ){
+	cvZero( gray );
+	cvEllipse( gray, cvPoint( 125, 125 ), cvSize( 50, 25 ), 0, 0, 360, cvScalarAll( 255 ), -1, 8 ); 
+	cvEllipse( gray, cvPoint( 125, 375 ), cvSize( 50, 25 ), 0, 0, 360, cvScalarAll( 255 ), -1, 8 );
+	cvEllipse( gray, cvPoint( 375, 125 ), cvSize( 50, 25 ), 0, 0, 360, cvScalarAll( 255 ), -1, 8 );
+	cvEllipse( gray, cvPoint( 375, 375 ), cvSize( 50, 25 ), 0, 0, 360, cvScalarAll( 255 ), -1, 8 );
+	cvCircle( gray, cvPoint( 125, 125 ), 20, cvScalarAll( 0 ), -1, 8 );
+	cvCircle( gray, cvPoint( 125, 375 ), 20, cvScalarAll( 0 ), -1, 8 );
+	cvCircle( gray, cvPoint( 375, 125 ), 20, cvScalarAll( 0 ), -1, 8 );
+	cvCircle( gray, cvPoint( 375, 375 ), 20, cvScalarAll( 0 ), -1, 8 );
+	cvEllipse( gray, cvPoint( 125, 125 ), cvSize( 15, 7.5 ), 0, 0, 360, cvScalarAll( 255 ), -1, 8 ); 
+	cvEllipse( gray, cvPoint( 125, 375 ), cvSize( 15, 7.5 ), 0, 0, 360, cvScalarAll( 255 ), -1, 8 ); 
+	cvEllipse( gray, cvPoint( 375, 125 ), cvSize( 15, 7.5 ), 0, 0, 360, cvScalarAll( 255 ), -1, 8 ); 
+	cvEllipse( gray, cvPoint( 375, 375 ), cvSize( 15, 7.5 ), 0, 0, 360, cvScalarAll( 255 ), -1, 8 ); 
+}
